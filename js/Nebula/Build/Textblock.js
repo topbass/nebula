@@ -7,10 +7,10 @@
  */
 Nebula.Register("Nebula.Build");
 
-Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
+Nebula.Build.Textblock = (function(window, $, N, B, W, undefined) {
     "use strict";
 
-    var parent = Nebula.Core.Abstract;
+    var parent = N.Core.Abstract;
 
     var self = function(target) {
         // ***** PUBLIC PROPERTIES *****
@@ -40,7 +40,7 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
         // ***** CONSTRUCTOR *****
         initialize: function() {
             this.configs = $.extend(
-                {}, this.defaults, Factory.readData(this.target, "config")
+                {}, this.defaults, W.Factory.readData(this.target, "config")
             );
             this.configs.editable = this.boolval(this.configs.editable || 0);
 
@@ -111,7 +111,7 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
                 param = $(document.createElement("input")).prop("type", "hidden");
 
             if (tt.is(".btn-edit")) {
-                Factory.modal(t.modal).show();
+                W.Factory.modal(t.modal).show();
                 t.form.find(":input[type='hidden']").remove();
                 $.each(block.data("blockParams"), function(field, value) {
                     t.form.append(param.clone().prop({
@@ -120,12 +120,12 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
                     }));
                 });
                 t.editor.val(body.html());
-                Factory.editor(t.editor, {
+                W.Factory.editor(t.editor, {
                     statusbar: false,
                     height   : ($(window).height() * 0.56),
                     setup    : function(ed) {
                         ed.on("init", function(args) {
-                            Factory.modal(t.modal).resize();
+                            W.Factory.modal(t.modal).resize();
                         });
                     }
                 });
@@ -141,9 +141,9 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
                 body  = (block.find(".expandable-content").length > 0) ?
                     block.find(".expandable-content") :
                     block.find(".textblock-content"),
-                html  = Factory.editor(t.editor).tinymce().getContent();
+                html  = W.Factory.editor(t.editor).tinymce().getContent();
 
-            Factory.modal(t.modal).hide();
+            W.Factory.modal(t.modal).hide();
             body.html(html);
             t.editor.val(html);
             t.xhr({
@@ -165,17 +165,17 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
 
         showLoader: function() {
             this.loader.show();
-            Factory.spinner(this.loader.find("div.spinner")).play();
+            W.Factory.spinner(this.loader.find("div.spinner")).play();
         },
 
         hideLoader: function() {
-            Factory.spinner(this.loader.find("div.spinner")).stop();
+            W.Factory.spinner(this.loader.find("div.spinner")).stop();
             this.loader.hide();
         },
 
         xhrLoadData: function() {
             var t = this,
-                q = Factory.dataToQuery(Factory.readData(t.target, "query"));
+                q = W.Factory.dataToQuery(W.Factory.readData(t.target, "query"));
 
             if (!t.target.data("dataSource")) {
                 return;
@@ -226,7 +226,7 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
                                 // if textblock is configured to use expander widget to
                                 // shorten display text in the block
                                 if (tt.data("expandableLines")) {
-                                    Factory.expander(ct.addClass("expandable"), {
+                                    W.Factory.expander(ct.addClass("expandable"), {
                                         lines: tt.data("expandableLines")
                                     });
                                 }
@@ -244,4 +244,4 @@ Nebula.Build.Textblock = (function($, Nebula, Widget, Factory) {
     });
 
     return self;
-}(jQuery, Nebula, Nebula.Widget, Nebula.Widget.Factory));
+}(window, jQuery, Nebula, Nebula.Build, Nebula.Widget));

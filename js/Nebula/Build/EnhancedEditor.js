@@ -7,10 +7,10 @@
  */
 Nebula.Register("Nebula.Build");
 
-Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
+Nebula.Build.EnhancedEditor = (function(window, $, N, B, W, undefined) {
     "use strict";
 
-    var parent = Nebula.Core.Abstract;
+    var parent = N.Core.Abstract;
 
     var self = function(target) {
         // ***** PUBLIC PROPERTIES *****
@@ -50,7 +50,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
         // ***** CONSTRUCTOR *****
         initialize: function() {
             this.configs = $.extend(
-                {}, this.configs, Factory.readData(this.target, "config")
+                {}, this.configs, W.Factory.readData(this.target, "config")
             );
             this.configs.editable = this.boolval(this.configs.editable || 0);
 
@@ -107,7 +107,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
         },
 
         constructEditorPane: function() {
-            Factory.editor(this.richEditor, {
+            W.Factory.editor(this.richEditor, {
                 // menubar: false,
                 statusbar: false,
                 height: ($(window).height() * 0.46)
@@ -194,14 +194,14 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
         },
 
         hideDialogPane: function() {
-            Factory.spinner(this.loaderPane.find("div.spinner")).stop();
+            W.Factory.spinner(this.loaderPane.find("div.spinner")).stop();
             this.dialogPane.hide().detach();
         },
 
         showLoader: function(reference) {
             reference = (reference.length) > 0 ? reference : this.layoutPane;
             this.loaderPane.insertAfter(reference).show();
-            Factory.spinner(this.loaderPane.find("div.spinner")).play();
+            W.Factory.spinner(this.loaderPane.find("div.spinner")).play();
         },
 
         hideLoader: function() {
@@ -226,8 +226,8 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
             } else {
                 section.show().insertAfter(reference);
             }
-            // Factory.tooltip(section.find(".section-toolbar-editing > button"));
-            // Factory.tooltip(section.find(".section-toolbar-status > button"));
+            // W.Factory.tooltip(section.find(".section-toolbar-editing > button"));
+            // W.Factory.tooltip(section.find(".section-toolbar-status > button"));
             $.publish("Nebula::EnhancedModal::Resize");
 
             return section;
@@ -237,7 +237,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
             var t = this, section, title, content;
 
             if (!t.richEditor.tinymce()) {
-                Factory.editor(t.richEditor).initialize({
+                W.Factory.editor(t.richEditor).initialize({
                     height: ($(window).height() * 0.46)
                 });
                 return;
@@ -248,7 +248,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
             content = t.richEditor.tinymce().getContent();
 
             try {
-                Factory.editor(t.richEditor).remove();
+                W.Factory.editor(t.richEditor).remove();
             } catch (e) {
                 if (t.isDebug()) {
                     console.debug(e);
@@ -303,7 +303,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
             t.sectionTitle.val(title);
             t.richEditor.val(content);
 
-            Factory.editor(t.richEditor).initialize({
+            W.Factory.editor(t.richEditor).initialize({
                 height: ($(window).height() * 0.46)
             });
 
@@ -352,7 +352,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
 
         handleAddNewButtonClick: function() {
             var t = this,
-                query = Factory.dataToQuery(Factory.readData(t.target, "query"));
+                query = W.Factory.dataToQuery(W.Factory.readData(t.target, "query"));
 
             location.href = "#";
             location.href = "#enhanced-editor-bottom";
@@ -385,7 +385,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
 
         createDuplicateSection: function(reference) {
             var t = this,
-                query = Factory.dataToQuery(Factory.readData(t.target, "query"));
+                query = W.Factory.dataToQuery(W.Factory.readData(t.target, "query"));
             t.xhr({
                 method: "GET",
                 url: t.target.data("guidUrl"),
@@ -421,7 +421,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
         getSortOrder: function() {
             var sortOrder = [];
             this.layoutPane.find("> section").each(function(index, section) {
-                var query = Factory.dataToQuery(Factory.readData($(section), "query"));
+                var query = W.Factory.dataToQuery(W.Factory.readData($(section), "query"));
                 if (query.documentSectionId) {
                     sortOrder.push(query.documentSectionId);
                 }
@@ -433,7 +433,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
 
         xhrLoadData: function() {
             var t = this,
-                query = Factory.dataToQuery(Factory.readData(t.target, "query"));
+                query = W.Factory.dataToQuery(W.Factory.readData(t.target, "query"));
             if (!t.target.data("dataSource")) {
                 return;
             }
@@ -467,7 +467,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
             var t = this,
                 query = $.extend(
                     {},
-                    Factory.dataToQuery(Factory.readData(section, "query")),
+                    W.Factory.dataToQuery(W.Factory.readData(section, "query")),
                     {
                         title: section.find(".section-title").html(),
                         body: section.find(".section-content").html(),
@@ -493,7 +493,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
             var t = this,
                 query = $.extend(
                     {},
-                    Factory.dataToQuery(Factory.readData(section, "query")),
+                    W.Factory.dataToQuery(W.Factory.readData(section, "query")),
                     {type: "delete"}
                 );
             t.xhr({
@@ -510,7 +510,7 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
 
         xhrUpdateSectionStatus: function(section, status) {
             var t = this,
-                q = Widget.Factory.dataToQuery(Widget.Factory.readData(section, "query")),
+                q = W.Factory.dataToQuery(W.Factory.readData(section, "query")),
                 c = section.find(".section-toolbar-status .status");
 
             delete q.documentId;
@@ -537,4 +537,4 @@ Nebula.Build.EnhancedEditor = (function($, Nebula, Widget, Factory) {
     });
 
     return self;
-}(jQuery, Nebula, Nebula.Widget, Nebula.Widget.Factory));
+}(window, jQuery, Nebula, Nebula.Build, Nebula.Widget));

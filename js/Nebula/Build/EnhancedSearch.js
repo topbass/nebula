@@ -7,7 +7,7 @@
  */
 Nebula.Register("Nebula.Build");
 
-Nebula.Build.EnhancedSearch = (function($, N, B, W, undefined) {
+Nebula.Build.EnhancedSearch = (function(window, $, N, B, W, undefined) {
     "use strict";
 
     var parent = N.Core.Abstract;
@@ -718,4 +718,4 @@ Nebula.Build.EnhancedSearch = (function($, N, B, W, undefined) {
     });
 
     return self;
-}(jQuery, Nebula, Nebula.Build, Nebula.Widget));
+}(window, jQuery, Nebula, Nebula.Build, Nebula.Widget));
